@@ -1,7 +1,7 @@
 'use strict';
 
 exports.handler = (event, context, callback) => {
-    //console.log("event", JSON.stringify(event));
+    //console.log("event", JSON.stringify(event)); //foo
     const request = event.Records[0].cf.request;
 
     const redirects = JSON.parse(`{{.RedirectsJSON}}`);
