@@ -42,6 +42,7 @@ RUN --mount=type=bind,target=. \
   --mount=type=bind,from=releaser,source=/out/releaser,target=/usr/bin/releaser \
   --mount=type=secret,id=AWS_ACCESS_KEY_ID \
   --mount=type=secret,id=AWS_SECRET_ACCESS_KEY \
+  --mount=type=secret,id=AWS_SESSION_TOKEN \
   releaser aws s3-update-config
 
 FROM base AS aws-lambda-invoke
@@ -50,4 +51,19 @@ ARG AWS_LAMBDA_FUNCTION
 RUN --mount=type=bind,from=releaser,source=/out/releaser,target=/usr/bin/releaser \
   --mount=type=secret,id=AWS_ACCESS_KEY_ID \
   --mount=type=secret,id=AWS_SECRET_ACCESS_KEY \
+  --mount=type=secret,id=AWS_SESSION_TOKEN \
   releaser aws lambda-invoke
+
+FROM base AS aws-cloudfront-update
+ARG AWS_REGION
+ARG AWS_LAMBDA_FUNCTION
+ARG AWS_CLOUDFRONT_ID
+RUN --mount=type=bind,target=. \
+  --mount=type=bind,from=sitedir,target=/site \
+  --mount=type=bind,from=releaser,source=/out/releaser,target=/usr/bin/releaser \
+  --mount=type=secret,id=AWS_ACCESS_KEY_ID \
+  --mount=type=secret,id=AWS_SECRET_ACCESS_KEY \
+  --mount=type=secret,id=AWS_SESSION_TOKEN \
+  AWS_LAMBDA_FUNCTION_FILE=cloudfront-lambda-redirects.js \
+  REDIRECTS_JSON=$(cat /site/redirects.json) \
+  releaser aws cloudfront-update
