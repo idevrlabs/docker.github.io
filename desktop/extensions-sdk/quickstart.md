@@ -55,7 +55,13 @@ To preview the extension in Docker Desktop, close and open Docker Dashboard once
 
 During UI development, it’s helpful to use hot reloading to test your changes without rebuilding your entire extension. See [Preview whilst developing the UI](build/test-debug.md#hot-reloading-whilst-developing-the-ui) for more information.
 
-## Step four: Submit and publish your extension to the Marketplace
+## Step four: Update and preview the extension
+
+To update the extension in Docker Desktop, run:
+
+'docker extension update <name-of-your-extension>'
+  
+## Step five: Submit and publish your extension to the Marketplace
 
 If you want to make your extension available to all Docker Desktop users, you can submit it for publication in the Marketplace. For more information, see [Publish](extensions/index.md).
 
